@@ -48,4 +48,4 @@ Tehnologii utilizate
 
     JXMapViewer2: Pentru suportul de hărți OpenStreetMap.
 
-![Imagine cu rutele](waypointsmap.jpg)
+![Imagine cu rutele](waypointsmap.JPG)
