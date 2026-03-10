@@ -1,46 +1,49 @@
-# Lab 8 - Airplane Route Management
+# Aplicație Airways Route Management System
 
-## Introduction
-An airplane route composed of waypoints is a predefined path through the airspace that an aircraft follows to reach its destination. The route is composed of a series of geographic coordinates called waypoints, which are specific locations in the airspace that are used to define the path of the route. Each waypoint is identified by a unique name and has a specific latitude, longitude, and altitude associated with it.
+Airways Route Management System
 
-Airplane routes composed of waypoints can be pre-defined and stored in a flight management system, which is a computerized system used by pilots to plan and execute flights. The flight management system uses the predefined route to guide the aircraft along the path of the route, and can also calculate fuel consumption, estimated time of arrival, and other flight parameters based on the route and current flight conditions.
+Această aplicație este un sistem de management al punctelor de trecere aeriene (Waypoints) și al rutelor de zbor. Permite crearea, salvarea, listarea și vizualizarea pe hartă a punctelor geografice, folosind un sistem de stocare bazat pe fișiere JSON.
 
-## Exercise 1
+Arhitectură și Design Patterns
 
-A company needs a route management application that allows users to create and manage routes by specifying waypoints. The application should be able to calculate the total distance of a route, which is defined as the sum of the distances between each consecutive pair of waypoints. Each route should be saved in a separate folder, and each waypoint should be saved as a separate file using serializable mechanism or json format.
+Proiectul respectă bunele practici de programare orientată pe obiecte și separarea responsabilităților:
 
-Requirements:
+    Model Layer (Waypoint): Definește entitatea de bază cu atribute precum latitudine, longitudine și altitudine.
 
-The application should allow users to create and delete routes.
-- Each route should be associated with a unique name, and the user should be able to specify the name of a new route when creating it. 
-- The application should allow users to add waypoints in a route and save to a local folder.
-- Each waypoint should have a name, a latitude, a longitude, and an altitude, which the user should be able to specify when creating a new waypoint added to a route.
-- The application should calculate the total distance of a route by summing the distances between each consecutive pair of waypoints using the Haversine formula (implementation example https://www.geeksforgeeks.org/haversine-formula-to-find-distance-between-two-points-on-a-sphere/).
-- Each route should be saved in a separate folder, and each waypoint should be saved as a separate file using serializable mechanism or json mechanism.
-- For simplification each route will be saved in a folder with the same name (as the route)
-- The user should be able to load a route from a folder and display total distance and list of waypoints
-- The user should be able to delete a route (delete a folder content and folder itself containing the route)
-- The user should be able to list all available routes (display name of the folders containing the routes)
+    Repository Layer (IWaypointRepository): Gestionează persistența datelor. Implementarea WaypointFileJsonRepository transformă obiectele Java în fișiere .json folosind biblioteca Jackson.
 
-For testing you can use this example route:
-LRCL-LROP 
-- "LRCL" (Cluj-Napoca International Airport): 46.7852° N, 23.6862° E, 415 meters altitude
-- "TASOD" (Tasnad VOR/DME): 47.0548° N, 23.9212° E, 10460 meters altitude
-- "SOPAV" (Sopot VOR/DME): 46.9804° N, 24.7365° E, 10900 meters altitude
-- "BIRGU" (Birligi VOR/DME): 45.9467° N, 26.0217° E, 10200 meters altitude
-- "LROP" (Henri Coandă International Airport): 44.5711° N, 26.0858° E, 106 meters altitude
+    Service Layer (WaypointService): Conține logica de business și face legătura între interfață și baza de date (fișiere).
 
-*Notes*
-- In project 'examples' package and sub-packages you can find some examples how to work with files, serializable and json. Package workTruckMonitoring contains a little bit more complex example, but you do not need to implement the application in the same way (no need to have repository, service, etc.). For this particular case objects are saved as jsons, but you can use either serializable mechanism (see serializableJson and serializableObject examples);
-- In project 'airways' package you can find a sample implementation of function to calculate distance between 2 geographical points; 
-- In project 'airways' package you can find a suggested Waypoint object structure which cane be extended in order to fully implement the application;
+    Manager Layer (RouteManager): Specializat în operațiuni complexe pe rute, cum ar fi încărcarea unei rute întregi dintr-un folder și calcularea distanțelor.
 
-## Exercise 2 - Use case diagram
+Funcționalități Principale
 
-Create UML Use-Case diagram for the application.
-![Exercise 2 image](docs/ex1.jpg)
+    Gestiune Rute: Organizarea waypoint-urilor în subfoldere specifice fiecărei rute (ex: LRCL-TASOD).
 
-## Exercise 3 - Class diagram
+    Persistență JSON: Salvarea automată a punctelor în format JSON pentru interoperabilitate.
 
-Create UML Class diagram for the application.
-![Exercise 3 image](docs/ex1.jpg)
+    Calcul Distanțe (Haversine): Implementarea formulei Haversine pentru a calcula distanța reală în kilometri între coordonate geografice, ținând cont de curbura Pământului.
+
+    Vizualizare Map: Integrare cu JXMapViewer pentru a afișa rutele de zbor pe o hartă interactivă.
+
+    Tratarea Excepțiilor: Sistem personalizat de erori (WaypointNotFoundException) pentru căutări eșuate.
+
+Cum funcționează?
+
+    Adăugare: Se creează puncte noi folosind WaypointService. Acestea sunt salvate imediat pe disk sub formă de fișier .json.
+
+    Încărcare: RouteManager scanează folderele de rute și reconstruiește lista de obiecte Waypoint din fișierele găsite.
+
+    Calcul: Sistemul parcurge lista de puncte și calculează distanța totală a zborului.
+
+    Afișare: Aplicația deschide o fereastră grafică unde punctele sunt marcate pe coordonatele GPS corespunzătoare.
+
+Tehnologii utilizate
+
+    Java 8+
+
+    Jackson Databind: Pentru procesarea formatului JSON.
+
+    Lombok: Pentru reducerea codului boilerplate (getters/setters).
+
+    JXMapViewer2: Pentru suportul de hărți OpenStreetMap.
