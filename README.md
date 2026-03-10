@@ -47,3 +47,5 @@ Tehnologii utilizate
     Lombok: Pentru reducerea codului boilerplate (getters/setters).
 
     JXMapViewer2: Pentru suportul de hărți OpenStreetMap.
+
+waypointsmap.jpg
